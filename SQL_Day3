@@ -1,0 +1,357 @@
+-- Create, Insert, Update and Delete
+-- Create a rolodex database.
+postgres=# CREATE DATABASE \c;
+CREATE DATABASE
+
+-- Connect to the database.
+postgres=# \c rolodex
+
+
+-- Create a persons table with a serial PRIMARY KEY, given_name, family_name, address, dob, email using appropriate datatypes found here.
+rolodex=# CREATE TABLE persons (id serial PRIMARY KEY, given_name varchar, family_name varchar, address varchar, dob date, email varchar);
+CREATE TABLE
+rolodex=# select * from persons
+rolodex-# ;
+ id | given_name | family_name | address | dob | email
+----+------------+-------------+---------+-----+-------
+(0 rows)
+
+rolodex=#
+
+--Add five or more family members to the persons table.
+
+INSERT INTO persons(given_name, family_name, address, dob, email)
+VALUES ('Robin', 'Hood', '22 Woods Way', '07-04-1800', 'rhood@hood.com'),
+('Super', 'Man', '01 Kryptonite Way', '01-01-1811', 'superman@man.com'),
+('Bat', 'Man', '01 Kryptonite Way', '09-09-1821', 'batman@man.com'),
+('Mary', 'Hood', '21 Woods Way', '09-07-1801', 'mhood@hood.com'),
+('Little Red Riding', 'Hood', '21 Woods Way', '10-10-1831', 'red@hood.com');
+rolodex=# select * from persons
+rolodex-# ;
+ id |    given_name     | family_name |      address      |    dob     |      email
+----+-------------------+-------------+-------------------+------------+------------------
+  1 | Robin             | Hood        | 22 Woods Way      | 1800-07-04 | rhood@hood.com
+  2 | Super             | Man         | 01 Kryptonite Way | 1811-01-01 | superman@man.com
+  3 | Bat               | Man         | 01 Kryptonite Way | 1821-09-09 | batman@man.com
+  4 | Mary              | Hood        | 21 Woods Way      | 1801-09-07 | mhood@hood.com
+  5 | Little Red Riding | Hood        | 21 Woods Way      | 1831-10-10 | red@hood.com
+(5 rows)
+
+rolodex=#
+
+-- How many have the same family_name as you?
+rolodex=# select family_name from persons where family_name='Hood';
+ family_name
+-------------
+ Hood
+ Hood
+ Hood
+(3 rows)
+
+-- Add yourself into the persons table.
+INSERT INTO persons(given_name, family_name, address, dob, email)
+VALUES ('Jessica', 'Hood', '23 Woods Way', '10-19-1841', 'jess@hood.com'),
+('Amar', 'Hood', '23 Woods Way', '08-19-1845', 'amar@hood.com'),
+('Jeannette', 'Hood', '23 Woods Way', '06-01-1850', 'jeannette@hood.com');
+
+rolodex=# select * from persons;
+ id |    given_name     | family_name |      address      |    dob     |       email
+----+-------------------+-------------+-------------------+------------+--------------------
+  1 | Robin             | Hood        | 22 Woods Way      | 1800-07-04 | rhood@hood.com
+  2 | Super             | Man         | 01 Kryptonite Way | 1811-01-01 | superman@man.com
+  3 | Bat               | Man         | 01 Kryptonite Way | 1821-09-09 | batman@man.com
+  4 | Mary              | Hood        | 21 Woods Way      | 1801-09-07 | mhood@hood.com
+  5 | Little Red Riding | Hood        | 21 Woods Way      | 1831-10-10 | red@hood.com
+  6 | Jessica           | Hood        | 23 Woods Way      | 1841-10-19 | jess@hood.com
+  7 | Amar              | Hood        | 23 Woods Way      | 1845-08-19 | amar@hood.com
+  8 | Jeannette         | Hood        | 23 Woods Way      | 1850-06-01 | jeannette@hood.com
+(8 rows)
+
+rolodex=#
+-- Update all family members with the same family_name as you, to live at the same address.
+rolodex=# update persons set address='23 Woods Way' where address='22 Woods Way';
+UPDATE 1
+rolodex=# update persons set address='23 Woods Way' where address='21 Woods Way';
+UPDATE 2
+rolodex=# select * from persons;
+ id |    given_name     | family_name |      address      |    dob     |       email
+----+-------------------+-------------+-------------------+------------+--------------------
+  2 | Super             | Man         | 01 Kryptonite Way | 1811-01-01 | superman@man.com
+  3 | Bat               | Man         | 01 Kryptonite Way | 1821-09-09 | batman@man.com
+  6 | Jessica           | Hood        | 23 Woods Way      | 1841-10-19 | jess@hood.com
+  7 | Amar              | Hood        | 23 Woods Way      | 1845-08-19 | amar@hood.com
+  8 | Jeannette         | Hood        | 23 Woods Way      | 1850-06-01 | jeannette@hood.com
+  1 | Robin             | Hood        | 23 Woods Way      | 1800-07-04 | rhood@hood.com
+  4 | Mary              | Hood        | 23 Woods Way      | 1801-09-07 | mhood@hood.com
+  5 | Little Red Riding | Hood        | 23 Woods Way      | 1831-10-10 | red@hood.com
+(8 rows)
+
+rolodex=#
+-- Delete all family members not with your family_name.
+delete from persons where family_name='Man';
+  DELETE 2
+rolodex=# select * from persons;
+ id |    given_name     | family_name |   address    |    dob     |       email
+----+-------------------+-------------+--------------+------------+--------------------
+  6 | Jessica           | Hood        | 23 Woods Way | 1841-10-19 | jess@hood.com
+  7 | Amar              | Hood        | 23 Woods Way | 1845-08-19 | amar@hood.com
+  8 | Jeannette         | Hood        | 23 Woods Way | 1850-06-01 | jeannette@hood.com
+  1 | Robin             | Hood        | 23 Woods Way | 1800-07-04 | rhood@hood.com
+  4 | Mary              | Hood        | 23 Woods Way | 1801-09-07 | mhood@hood.com
+  5 | Little Red Riding | Hood        | 23 Woods Way | 1831-10-10 | red@hood.com
+(6 rows)
+
+-- Create a Members table
+rolodex=#
+rolodex=# CREATE DATABASE country_club;
+CREATE DATABASE
+rolodex=# \c country_club
+You are now connected to database "country_club" as user "learn".
+country_club=# drop database rolodex;
+DROP DATABASE
+country_club=#
+
+-- A serial primary key, an incrementing unique ID value for each row. Each row represents a member.
+country_club=# CREATE TABLE members (
+country_club(#   id serial PRIMARY KEY,
+country_club(#   surname varchar,
+country_club(#   first_name varchar,
+country_club(#   address varchar,
+country_club(#   zipcode integer,
+country_club(#   telephone varchar,
+country_club(#   recommended_by integer REFERENCES members(id),
+country_club(#   join_date timestamp without time zone
+country_club(#   );
+CREATE TABLE
+country_club=# select * from members;
+ id | surname | first_name | address | zipcode | telephone | recommended_by | join_date
+----+---------+------------+---------+---------+-----------+----------------+-----------
+-- Create Facilities table
+CREATE TABLE facilities(id integer, name varchar, member_cost numeric, guest_cost numeric,
+
+
+CREATE TABLE
+country_club=# select * from facilities;
+ id | name | member_cost | guest_cost | initial_out_lay | monthly_maintenance
+----+------+-------------+------------+-----------------+---------------------
+(0 rows)
+
+
+-- Create Bookings table
+CREATE TABLE bookings(id integer, facility_id integer, member_id integer, start_time timestamp, slots integer);
+
+--Import Data Into the Database
+
+Last login: Wed Oct 26 10:53:54 on ttys000
+learn15:~ learn$ cd desktop
+learn15:desktop learn$ git clone https://github.com/LEARNAcademy/wiki.git
+Cloning into 'wiki'...
+remote: Counting objects: 429, done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 429 (delta 0), reused 0 (delta 0), pack-reused 423
+Receiving objects: 100% (429/429), 142.37 KiB | 136.00 KiB/s, done.
+Resolving deltas: 100% (216/216), done.
+Checking connectivity... done.
+learn15:desktop learn$ cd wiki
+learn15:wiki learn$ atom .
+learn15:wiki learn$
+
+learn15:wiki learn$ psql postgres
+psql (9.5.2)
+Type "help" for help.
+
+postgres=# \c country_club
+You are now connected to database "country_club" as user "learn".
+--Epic 2 Query the Database using JOINs on the Foreign Keys
+
+--roduce a list of start times for bookings by members named 'David Farrell'?
+country_club=# select * from members where surname = 'Farrell';
+ id | surname | first_name |             address             | zipcode |   telephone    | recommended_by |      join_date
+----+---------+------------+---------------------------------+---------+----------------+----------------+---------------------
+ 13 | Farrell | Jemima     | 103 Firth Avenue, North Reading |   57392 | (855) 016-0163 |                | 2016-08-10 14:28:01
+ 28 | Farrell | David      | 437 Granite Farm Road, Westford |   43532 | (855) 755-9876 |                | 2016-09-15 08:22:05
+(2 rows)
+
+---Hint: Remember that a JOIN is selecting all records from Table A and Table
+country_club=# select * from bookings b JOIN members m ON b.id = m.id;
+ id | facility_id | member_id |     start_time      | slots | id |      surname      | first_name |                 address                 | zipcode |   telephone    | recommended_by |      join_date
+----+-------------+-----------+---------------------+-------+----+-------------------+------------+-----------------------------------------+---------+----------------+----------------+---------------------
+  0 |           3 |         1 | 2016-07-03 11:00:00 |     2 |  0 | GUEST             | GUEST      | GUEST                                   |       0 | (000) 000-0000 |                | 2016-07-01 00:00:00
+  1 |           4 |         1 | 2016-07-03 08:00:00 |     2 |  1 | Smith             | Darren     | 8 Bloomsbury Close, Boston              |    4321 | 555-555-5555   |                | 2016-07-02 12:02:05
+  2 |           6 |         0 | 2016-07-03 18:00:00 |     2 |  2 | Smith             | Tracy      | 8 Bloomsbury Close, New York            |    4321 | 555-555-5555   |                | 2016-07-02 12:08:23
+  3 |           7 |         1 | 2016-07-03 19:00:00 |     2 |  3 | Rownam            | Tim        | 23 Highway Way, Boston                  |   23423 | (844) 693-0723 |                | 2016-07-03 09:32:15
+  4 |           8 |         1 | 2016-07-03 10:00:00 |     1 |  4 | Joplette          | Janice     | 20 Crossing Road, New York              |     234 | (833) 942-4710 |              1 | 2016-07-03 10:25:05
+  5 |           8 |         1 | 2016-07-03 15:00:00 |     1 |  5 | Butters           | Gerald     | 1065 Huntingdon Avenue, Boston          |   56754 | (844) 078-4130 |              1 | 2016-07-09 10:44:09
+  6 |           0 |         2 | 2016-07-04 09:00:00 |     3 |  6 | Tracy             | Burton     | 3 Tunisia Drive, Boston                 |   45678 | (822) 354-9973 |                | 2016-07-15 08:52:55
+  7 |           0 |         2 | 2016-07-04 15:00:00 |     3 |  7 | Dare              | Nancy      | 6 Hunting Lodge Way, Boston             |   10383 | (833) 776-4001 |              4 | 2016-07-25 08:59:12
+  8 |           4 |         3 | 2016-07-04 13:30:00 |     2 |  8 | Boothe            | Tim        | 3 Bloomsbury Close, Reading, 00234      |     234 | (811) 433-2547 |              3 | 2016-07-25 16:02:35
+  9 |           4 |         0 | 2016-07-04 15:00:00 |     2 |  9 | Stibbons          | Ponder     | 5 Dragons Way, Winchester               |   87630 | (833) 160-3900 |              6 | 2016-07-25 17:09:05
+ 10 |           4 |         0 | 2016-07-04 17:30:00 |     2 | 10 | Owen              | Charles    | 52 Cheshire Grove, Winchester, 28563    |   28563 | (855) 542-5251 |              1 | 2016-08-03 19:42:37
+ 11 |           6 |         0 | 2016-07-04 12:30:00 |     2 | 11 | Jones             | David      | 976 Gnats Close, Reading                |   33862 | (844) 536-8036 |              4 | 2016-08-06 16:32:55
+ 12 |           6 |         0 | 2016-07-04 14:00:00 |     2 | 12 | Baker             | Anne       | 55 Powdery Street, Boston               |   80743 | 844-076-5141   |              9 | 2016-08-10 14:23:22
+:
+--Produce a list of start times for bookings by members named 'David Farrell'?
+
+select * from bookings b JOIN members m ON b.id = m.id where surname = 'Farrell' and first_name = 'David';
+id | facility_id | member_id |     start_time      | slots | id | surname | first_name |             address             | zipcode |   telephone    | recommended_by |      join_date
+----+-------------+-----------+---------------------+-------+----+---------+------------+---------------------------------+---------+----------------+----------------+---------------------
+ 28 |           0 |         2 | 2016-07-06 15:30:00 |     3 | 28 | Farrell | David      | 437 Granite Farm Road, Westford |   43532 | (855) 755-9876 |                | 2016-09-15 08:22:05
+(1 row)
+
+--Hint: Remember that a JOIN is selecting all records from Table A and Table B, where the join condition is met.
+
+-- select start_time from bookings b JOIN members m ON b.id = m.id where surname = 'Farrell' and first_name = 'David';
+--
+-- Produce a list of the start times for bookings for tennis courts, for the date '2016-09-21'? Return a list of start time and facility name pairings, ordered by the time.
+--
+-- Hint: In the WHERE clause use IN. See Example IN Operator
+
+select b.start_time, f.name from facilities f JOIN bookings b ON f.id =b.facility_id JOIN members m ON b.member_id=m.id where f.name LIKE 'Tennis%';
+
+start_time      |      name
+---------------------+----------------
+2016-07-04 09:00:00 | Tennis Court 1
+2016-07-04 15:00:00 | Tennis Court 1
+2016-07-05 17:30:00 | Tennis Court 2
+2016-07-06 08:00:00 | Tennis Court 1
+2016-07-06 14:00:00 | Tennis Court 1
+2016-07-06 15:30:00 | Tennis Court 1
+2016-07-07 08:30:00 | Tennis Court 1
+
+
+--Produce a list of all members who have used a tennis court? Include in your output the name of the court, and the name of the member formatted as first name, surname. Ensure no duplicate data, and order by the first name.
+
+select f.name, surname, first_name from facilities f JOIN bookings b ON f.id =b.facility_id JOIN members m ON b.member_id=m.id where f.name LIKE 'Tennis%';
+
+
+select f.name, surname, first_name from facilities f JOIN members m ON f.id =m.id JOIN bookings b ON m.id = b.id where f.name IN  ('Tennis Court 1', 'Tennis Court 2');
+
+-- CORRECT TABLE SETTING // RIGHT HERE LADIES!!!!!~ GREAT JOB!! remember to reference the other tables see line 232 and line 233
+create table bookings (
+  id serial PRIMARY KEY,
+  facility_id integer REFERENCES facilities(id),
+  member_id integer REFERENCES  members(id),
+  start_time timestamp,
+  slots integer);
+
+create table facilities(
+  id serial PRIMARY KEY,
+  name varchar,
+  member_cost numeric,
+  guest_cost numeric,
+  initial_out_lay numeric,
+  monthly_maintenance numeric);
+
+
+select f.name, m.surname, m.first_name from facilities f JOIN bookings b ON f.id =b.facility_id JOIN members m ON b.member_id=m.id where f.name LIKE 'Tennis%';
+
+--Produce a list of the start times for bookings for tennis courts, for the date '2016-09-21'? Return a list of start time and facility name pairings, ordered by the time.
+
+--Hint: In the WHERE clause use IN. See Example IN Operator
+country_club=# select b.start_time, f.name from bookings b JOIN facilities f ON b.facility_id=f.id Where
+country_club-# b.start_time >= '2016-09-21' and
+country_club-# b.start_time < '2016-09-22' and f.name IN ('Tennis Court 1', 'Tennis Court 2');
+     start_time      |      name
+---------------------+----------------
+ 2016-09-21 08:00:00 | Tennis Court 1
+ 2016-09-21 09:30:00 | Tennis Court 1
+ 2016-09-21 12:00:00 | Tennis Court 1
+ 2016-09-21 13:30:00 | Tennis Court 1
+ 2016-09-21 15:30:00 | Tennis Court 1
+ 2016-09-21 17:00:00 | Tennis Court 1
+ 2016-09-21 08:00:00 | Tennis Court 2
+ 2016-09-21 10:00:00 | Tennis Court 2
+ 2016-09-21 11:30:00 | Tennis Court 2
+ 2016-09-21 14:00:00 | Tennis Court 2
+ 2016-09-21 16:00:00 | Tennis Court 2
+ 2016-09-21 18:00:00 | Tennis Court 2
+(12 rows)
+
+
+-- Produce a list of all members who have used a tennis court? Include in your output the name of the court, and the name of the member formatted as first name, surname. Ensure no duplicate data, and order by the first name.
+
+country_club=# select distinct surname, first_name,f.name from facilities f JOIN bookings b ON f.id =b.facility_id JOIN members m ON b.member_id=m.id where f.name IN  ('Tennis Court 1', 'Tennis Court 2'); --not sorted
+ surname  | first_name |      name
+----------+------------+----------------
+ Hunt     | John       | Tennis Court 2
+ Joplette | Janice     | Tennis Court 2
+ Stibbons | Ponder     | Tennis Court 1
+ Tracy    | Burton     | Tennis Court 1
+ Smith    | Tracy      | Tennis Court 1
+ Butters  | Gerald     | Tennis Court 2
+ Baker    | Timothy    | Tennis Court 1
+ Baker    | Anne       | Tennis Court 1
+ Smith    | Darren     | Tennis Court 2
+ GUEST    | GUEST      | Tennis Court 2
+ Dare     | Nancy      | Tennis Court 2
+ Rumney   | Henrietta  | Tennis Court 2
+
+ country_club=# select distinct surname, first_name,f.name from facilities f JOIN bookings b ON f.id =b.facility_id JOIN members m ON b.member_id=m.id where f.name IN  ('Tennis Court 1', 'Tennis Court 2') order by first_name; -- sorted using order by first_name.
+ surname  | first_name |      name
+----------+------------+----------------
+ Baker    | Anne       | Tennis Court 1
+ Baker    | Anne       | Tennis Court 2
+ Tracy    | Burton     | Tennis Court 1
+ Tracy    | Burton     | Tennis Court 2
+ Owen     | Charles    | Tennis Court 1
+ Owen     | Charles    | Tennis Court 2
+ Smith    | Darren     | Tennis Court 2
+ Farrell  | David      | Tennis Court 1
+ Farrell  | David      | Tennis Court 2
+ Jones    | David      | Tennis Court 1
+ Jones    | David      | Tennis Court 2
+
+ --Produce a number of how many times Nancy Dare has used the pool table facility?
+
+select count(f.name), first_name, surname, f.name from facilities f JOIN bookings b ON f.id = b.facility_id JOIN members m ON b.member_id=m.id where first_name='Nancy' and surname='Dare' group by first_name, surname, f.name;
+
+ count | first_name | surname |      name
+-------+------------+---------+-----------------
+    25 | Nancy      | Dare    | Tennis Court 1
+    11 | Nancy      | Dare    | Tennis Court 2
+     5 | Nancy      | Dare    | Massage Room 2
+    23 | Nancy      | Dare    | Snooker Table
+    10 | Nancy      | Dare    | Badminton Court
+     5 | Nancy      | Dare    | Table Tennis
+    19 | Nancy      | Dare    | Pool Table
+    19 | Nancy      | Dare    | Massage Room 1
+(8 rows)
+
+
+
+-- Produce a list of all members who have recommended another member? Ensure that there are no duplicates in the list, and that results are ordered by (surname, firstname).
+--
+-- Hint: SELF JOIN The tables we are joining don't have to be different tables. We can join a table with itself. This is called a self join. In this case we have to use aliases for the table otherwise PostgreSQL will not know which id column of which table instance we mean.
+
+select DISTINCT s.first_name AS recommended_by_firstname, s.surname recommended_by_lastname from members m join members s on m.id = s.recommended_by ORDER BY s.surname;
+
+ recommended_by_firstname | recommended_by_lastname
+--------------------------+-------------------------
+ Florence                 | Bader
+ Anne                     | Baker
+ Timothy                  | Baker
+ Tim                      | Boothe
+ Gerald                   | Butters
+ Joan                     | Coplin
+ Erica                    | Crumpet
+ Nancy                    | Dare
+ Matthew                  | Genting
+ John                     | Hunt
+ David                    | Jones
+ Douglas                  | Jones
+ Janice                   | Joplette
+ Anna                     | Mackenzie
+ Charles                  | Owen
+ David                    | Pinker
+ Millicent                | Purview
+ Henrietta                | Rumney
+ Ramnaresh                | Sarwin
+ Jack                     | Smith
+ Ponder                   | Stibbons
+ Henry                    | Worthington-Smyth
+(22 rows)
+
+--Output a list of all members, including the individual who recommended them (if any), without using any JOINs? Ensure that there are no duplicates in the list, and that member is formatted as one column and ordered by member.
+
+select DISTINCT m.first_name || ' ' || m.surname AS members,
+(select s.first_name || ' ' || s.surname AS recommender from members s where s.id = m.recommended_by) FROM members m;
